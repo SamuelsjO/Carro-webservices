@@ -3,10 +3,13 @@ package com.samuelTI.api.domain;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+
+import com.samuelTI.api.domain.dto.CarroDTO;
 
 @Service
 public class CarroService {
@@ -15,30 +18,36 @@ public class CarroService {
 	private CarroRepository repository;
 	
 	
-	public Iterable<Carro> getCarros(){
-		return repository.findAll();
+	public List<CarroDTO> getCarros(){
+		
+		return repository.findAll().stream().map(c -> CarroDTO.create(c)).collect(Collectors.toList());
+		/*
+		List<Carro> carros = repository.findAll();
+		List<CarroDTO> listDTO = carros.stream().map(c -> new CarroDTO(c)).collect(Collectors.toList());
+		return listDTO*/
+		
 		
 	}
 	
-	public Optional<Carro> getCarrosById(Long id) {
-		return repository.findById(id);
+	public Optional<CarroDTO> getCarrosById(Long id) {
+		return repository.findById(id).map(c -> CarroDTO.create(c));
 	}
 	
-	public Iterable<Carro> getCarrosByTipo(String tipo) {
+	public List<CarroDTO> getCarrosByTipo(String tipo) {
 		
-		return repository.findByTipo(tipo);
+		return repository.findByTipo(tipo).stream().map(c -> CarroDTO.create(c)).collect(Collectors.toList());
 	}
 	
-	public Carro insert(Carro carro) { 
+	public CarroDTO insert(Carro carro) { 
 		Assert.isNull(carro.getId() , "Não foi possivel inserir o registro");
-		return repository.save(carro); 
+		return CarroDTO.create(repository.save(carro)); 
 	}
 	
-	public Carro update(Carro carro, Long id) {
+	public CarroDTO update(Carro carro, Long id) {
 		Assert.isNull(carro.getId() , "Não foi possivel atualizar o registro");
 		
 		//Busca o carro no banco de dados
-		Optional<Carro> optional = getCarrosById(id);
+		Optional<Carro> optional = repository.findById(id);
 		if(optional.isPresent()){
 			Carro  db = optional.get();
 			//Copiar as propriedades
@@ -47,7 +56,8 @@ public class CarroService {
 			System.out.println("Carro id " + db.getId());
 			//atualiza o carro
 			repository.save(db);
-			return db;
+			
+			return CarroDTO.create(db);
 		} else {
 			throw new RuntimeException("Não foi possivel atualizar o registro");
 		}
@@ -55,7 +65,7 @@ public class CarroService {
 	}
 	
 	public void delete(Long id) {
-		Optional<Carro> carro = getCarrosById(id);
+		Optional<CarroDTO> carro = getCarrosById(id);
 		if(carro.isPresent()) {
 			repository.deleteById(id);
 		}

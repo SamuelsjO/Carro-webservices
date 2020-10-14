@@ -1,28 +1,25 @@
-package com.samuelTI.api.domain;
+package com.samuelTI.api.domain.dto;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
- 
-@Entity
+import org.modelmapper.ModelMapper;
 
-public class Carro {
+import com.samuelTI.api.domain.Carro;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+public class CarroDTO {
+
 	private Long id;
 	private String nome;
 	private String tipo;
 	
-	public Carro() {
+	public static CarroDTO create(Carro c) {
+		ModelMapper modelMapper = new ModelMapper();
+		return modelMapper.map(c, CarroDTO.class);
+	}
+	
+	
+	public CarroDTO() {
 		
 	}
 	
-	public Carro(Long id, String nome) {
-		this.id = id;
-		this.nome = nome;
-	}
 	public Long getId() {
 		return id;
 	}
@@ -41,8 +38,6 @@ public class Carro {
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
 	}
-	
-	
 	
 	
 }
