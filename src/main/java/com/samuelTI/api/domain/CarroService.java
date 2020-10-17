@@ -1,6 +1,5 @@
 package com.samuelTI.api.domain;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -10,6 +9,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import com.samuelTI.api.domain.dto.CarroDTO;
+import com.samuelTI.api.execption.ObjectNotFoundExecption;
+
+import javassist.tools.rmi.ObjectNotFoundException;
 
 @Service
 public class CarroService {
@@ -20,16 +22,11 @@ public class CarroService {
 	public List<CarroDTO> getCarros() {
 
 		return repository.findAll().stream().map(CarroDTO::create).collect(Collectors.toList());
-		/*
-		 * List<Carro> carros = repository.findAll(); List<CarroDTO> listDTO =
-		 * carros.stream().map(c -> new CarroDTO(c)).collect(Collectors.toList());
-		 * return listDTO
-		 */
-
+	
 	}
 
-	public Optional<CarroDTO> getCarrosById(Long id) {
-		return repository.findById(id).map(CarroDTO::create);
+	public CarroDTO getCarrosById(Long id) {
+		return repository.findById(id).map(CarroDTO::create).orElseThrow(() -> new ObjectNotFoundExecption("Carro não encotrado!!"));
 	}
 
 	public List<CarroDTO> getCarrosByTipo(String tipo) {
@@ -43,7 +40,6 @@ public class CarroService {
 	}
 
 	public CarroDTO update(Carro carro, Long id) {
-		//Assert.isNull(id, "Não foi possivel atualizar o registro");
 
 		// Busca o carro no banco de dados
 		Optional<Carro> optional = repository.findById(id);
@@ -60,28 +56,15 @@ public class CarroService {
 			return CarroDTO.create(db);
 		} else {
 			return null;
-			// throw new RuntimeException("Não foi possivel atualizar o registro");
+
 		}
 
 	}
 
-	public boolean delete(Long id) {
-		if (getCarrosById(id).isPresent()) {
-			repository.deleteById(id);
-			return true;
-		}
-		return false;
-	}
+	public void delete(Long id) {
 
-//	public List<Carro> getCarrosFakes() {
-//		List<Carro> carros = new ArrayList<>();
-//
-//		carros.add(new Carro(1L, "Fusca"));
-//		carros.add(new Carro(1L, "Brasilia"));
-//		carros.add(new Carro(1L, "Corovete"));
-//		carros.add(new Carro(1L, "Chevete"));
-//
-//		return carros;
-//	}
+		repository.deleteById(id);
+
+	}
 
 }
