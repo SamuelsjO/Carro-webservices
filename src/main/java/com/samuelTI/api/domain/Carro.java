@@ -19,9 +19,10 @@ public class Carro {
 		
 	}
 	
-	public Carro(Long id, String nome) {
+	public Carro(Long id, String nome, String tipo) {
 		this.id = id;
 		this.nome = nome;
+		this.tipo = tipo;
 	}
 	public Long getId() {
 		return id;

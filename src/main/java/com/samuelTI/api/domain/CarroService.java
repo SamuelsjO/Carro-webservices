@@ -43,7 +43,7 @@ public class CarroService {
 	}
 
 	public CarroDTO update(Carro carro, Long id) {
-		Assert.isNull(id, "Não foi possivel atualizar o registro");
+		//Assert.isNull(id, "Não foi possivel atualizar o registro");
 
 		// Busca o carro no banco de dados
 		Optional<Carro> optional = repository.findById(id);
@@ -73,15 +73,15 @@ public class CarroService {
 		return false;
 	}
 
-	public List<Carro> getCarrosFakes() {
-		List<Carro> carros = new ArrayList<>();
-
-		carros.add(new Carro(1L, "Fusca"));
-		carros.add(new Carro(1L, "Brasilia"));
-		carros.add(new Carro(1L, "Corovete"));
-		carros.add(new Carro(1L, "Chevete"));
-
-		return carros;
-	}
+//	public List<Carro> getCarrosFakes() {
+//		List<Carro> carros = new ArrayList<>();
+//
+//		carros.add(new Carro(1L, "Fusca"));
+//		carros.add(new Carro(1L, "Brasilia"));
+//		carros.add(new Carro(1L, "Corovete"));
+//		carros.add(new Carro(1L, "Chevete"));
+//
+//		return carros;
+//	}
 
 }
