@@ -11,8 +11,6 @@ import org.springframework.util.Assert;
 import com.samuelTI.api.domain.dto.CarroDTO;
 import com.samuelTI.api.execption.ObjectNotFoundExecption;
 
-import javassist.tools.rmi.ObjectNotFoundException;
-
 @Service
 public class CarroService {
 
