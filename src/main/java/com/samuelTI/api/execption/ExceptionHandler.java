@@ -6,6 +6,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -24,11 +25,22 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
 		return ResponseEntity.badRequest().build();
 	}
 	
-	
 	protected ResponseEntity<Object> handleHttpRequestMethodNotSupported(HttpRequestMethodNotSupportedException ex, HttpHeaders httpHeaders){
-		return new ResponseEntity<>("Operaçao nao permitida" , HttpStatus.METHOD_NOT_ALLOWED);
+		return new ResponseEntity<>(new ExecptionError("Operaçao nao permitida"), HttpStatus.METHOD_NOT_ALLOWED);
 	}
 	
+	@org.springframework.web.bind.annotation.ExceptionHandler({AccessDeniedException.class})
+	public ResponseEntity<?> accessDenied() {
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Error("Acesso Negado"));
+	}
+}
+
+class Error {
+	public String error;
+	
+	public Error(String error) {
+		this.error = error;
+	}
 }
 
 class ExecptionError implements Serializable {
