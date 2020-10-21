@@ -19,6 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.samuelTI.api.domain.Carro;
 import com.samuelTI.api.domain.dto.CarroDTO;
 
+ //Classe de teste
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = CarApiWebserviceApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CarrosAPITest {
