@@ -28,7 +28,7 @@ public class JwtUtil {
 		
 		byte[] signingKey = JwtUtil.JWT_SECRET.getBytes();
 		
-		token = token.replace("Bearer", "");
+		token = token.replace("Bearer ", "");
 			
 		return Jwts.parser()
 				.setSigningKey(signingKey)

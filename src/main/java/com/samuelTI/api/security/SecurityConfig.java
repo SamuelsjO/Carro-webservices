@@ -38,11 +38,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 
 		AuthenticationManager authManager = authenticationManager();
-		http.authorizeRequests().anyRequest().authenticated().antMatchers(HttpMethod.GET, "/api/v1/login").permitAll()
-				.anyRequest().authenticated().and().csrf().disable().addFilter(new JwtAuthenticationFilter(authManager))
-				.addFilter(new JwtAuthorizationFilter(authManager, userDetailsService)).exceptionHandling()
-				.accessDeniedHandler(accessDeniedHandler).authenticationEntryPoint(unauthorizedHandler).and()
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		
+		http
+			.authorizeRequests()
+			.antMatchers(HttpMethod.GET, "/api/v1/login").permitAll()
+			.antMatchers("/v2/api-docs\", \"/configuration/**\", \"/swagger*/**\", \"/webjars/**")
+			.permitAll()
+			.anyRequest()
+			.authenticated()
+			.and()
+			.csrf()
+			.disable()
+			.addFilter(new JwtAuthenticationFilter(authManager))
+			.addFilter(new JwtAuthorizationFilter(authManager, userDetailsService))
+			.exceptionHandling()
+			.accessDeniedHandler(accessDeniedHandler)
+			.authenticationEntryPoint(unauthorizedHandler)
+			.and()
+			.sessionManagement()
+			.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
 
 	@Override
