@@ -10,7 +10,6 @@ public class JwtLoginInput {
 	}
 
 	public JwtLoginInput(String username, String password) {
-		super();
 		this.username = username;
 		this.password = password;
 	}

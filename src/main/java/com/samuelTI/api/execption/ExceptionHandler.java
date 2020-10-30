@@ -6,7 +6,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -29,10 +28,16 @@ public class ExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(new ExecptionError("Operaçao nao permitida"), HttpStatus.METHOD_NOT_ALLOWED);
 	}
 	
-	@org.springframework.web.bind.annotation.ExceptionHandler({AccessDeniedException.class})
-	public ResponseEntity<?> accessDenied() {
-		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Error("Acesso Negado"));
+//	@org.springframework.web.bind.annotation.ExceptionHandler({AccessDeniedException.class})
+//	public ResponseEntity<?> accessDenied() {
+//		return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new Error("Acesso Negado"));
+//	}
+	
+	@org.springframework.web.bind.annotation.ExceptionHandler({ObjectNotFoundExecption.class})
+	public ResponseEntity<?> notFoundCarr() {
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Error("Carro não encotrado!!"));
 	}
+	
 }
 
 class Error {

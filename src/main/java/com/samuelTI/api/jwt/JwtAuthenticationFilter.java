@@ -22,56 +22,54 @@ import com.samuelTI.api.domain.dto.UserDTO;
 
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-	public static final String AUTH_URL = "/api/v1/login";
+    public static final String AUTH_URL = "/api/v1/login";
 
-	private final AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-	public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
-		this.authenticationManager = authenticationManager;
+    public JwtAuthenticationFilter(AuthenticationManager authenticationManager) {
+        this.authenticationManager = authenticationManager;
 
-		setFilterProcessesUrl(AUTH_URL);
-	}
+        // api/authenticate
+        setFilterProcessesUrl(AUTH_URL);
+    }
 
-	@Override
-	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) {
+    @Override
+    public Authentication attemptAuthentication(HttpServletRequest request,
+                                                HttpServletResponse response) {
 
-		try {
-			JwtLoginInput login = new ObjectMapper().readValue(request.getInputStream(), JwtLoginInput.class);
-			String username = login.getUsername();
-			String password = login.getPassword();
+        try {
+            JwtLoginInput login = new ObjectMapper().readValue(request.getInputStream(), JwtLoginInput.class);
+            String username = login.getUsername();
+            String password = login.getPassword();
 
-			if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
-				throw new BadCredentialsException("Invalid username/password.");
-			}
+            if(StringUtils.isEmpty(username) || StringUtils.isEmpty(password)) {
+                throw new BadCredentialsException("Invalid username/password.");
+            }
 
-			Authentication auth = new UsernamePasswordAuthenticationToken(username, password);
+            Authentication auth = new UsernamePasswordAuthenticationToken(username, password);
 
-			return authenticationManager.authenticate(auth);
+            return authenticationManager.authenticate(auth);
+        } catch (IOException e) {
+            throw new BadCredentialsException(e.getMessage());
+        }
+    }
 
-		} catch (IOException e) {
-			throw new BadCredentialsException(e.getMessage());
-		}
+    @Override
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
+                                            FilterChain filterChain, Authentication authentication) throws IOException {
+        User user = (User) authentication.getPrincipal();
 
-	}
+        String jwtToken = JwtUtil.createToken(user);
 
-	@Override
-	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-			FilterChain filterChain, Authentication authentication) throws IOException {
+//        String json = ServletUtil.getJson("token", jwtToken);
+        String json = UserDTO.create(user, jwtToken).toJson();
+        ServletUtil.write(response, HttpStatus.OK, json);
+    }
 
-		User user = (User) authentication.getPrincipal();
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException error) throws IOException, ServletException {
 
-		String jwtToken = JwtUtil.createToken(user);
-
-		String json = UserDTO.create(user, jwtToken).toJson();
-		ServletUtil.write(response, HttpStatus.OK, json);
-
-	}
-
-	@Override
-	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
-			AuthenticationException error) throws IOException, ServletException {
-
-		String json = ServletUtil.getJson("error", "Login incorreto");
-		ServletUtil.write(response, HttpStatus.UNAUTHORIZED, json);
-	}
+        String json = ServletUtil.getJson("error", "Login incorreto");
+        ServletUtil.write(response, HttpStatus.UNAUTHORIZED, json);
+    }
 }

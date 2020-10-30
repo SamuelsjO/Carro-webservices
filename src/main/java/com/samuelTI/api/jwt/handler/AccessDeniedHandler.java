@@ -2,7 +2,6 @@ package com.samuelTI.api.jwt.handler;
 
 import java.io.IOException;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,22 +20,23 @@ import com.samuelTI.api.jwt.ServletUtil;
  */
 
 @Component
-public class AccessDeniedHandler implements org.springframework.security.web.access.AccessDeniedHandler{
+public class AccessDeniedHandler implements org.springframework.security.web.access.AccessDeniedHandler {
 
-	@Override
-	public void handle(
-			HttpServletRequest request, 
-			HttpServletResponse response,
-			AccessDeniedException accessDeniedException) throws IOException, ServletException {
-		
-		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-		
-		if(auth != null) {
-			String json = ServletUtil.getJson("error", "Aesso negado. ");
-			ServletUtil.write(response, HttpStatus.FORBIDDEN, json);
-		}
-		
-	}
+    @Override
+    public void handle(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            AccessDeniedException exc) throws IOException {
+
+        Authentication auth
+                = SecurityContextHolder.getContext().getAuthentication();
+
+        if (auth != null) {
+
+            String json = ServletUtil.getJson("error", "Acesso negado.");
+            ServletUtil.write(response, HttpStatus.FORBIDDEN, json);
+        }
+    }
 
 	
 
