@@ -72,7 +72,7 @@ public class CarrosAPITest {
 		
 		List<CarroDTO> carros = getCarros("/api/v1/carros").getBody();
 		assertNotNull(carros);
-		assertEquals(30, carros.size());
+		assertEquals(10, carros.size());
 	}
 
 	@Test

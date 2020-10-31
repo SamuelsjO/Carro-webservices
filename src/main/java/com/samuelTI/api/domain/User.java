@@ -119,6 +119,10 @@ public class User implements UserDetails{
 		
 		return true;
 	}
+	public List<Role> getRoles() {
+		// TODO Auto-generated method stub
+		return roles;
+	}
 	
 	
 }

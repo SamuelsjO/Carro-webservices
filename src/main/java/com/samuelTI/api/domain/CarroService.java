@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -17,9 +18,9 @@ public class CarroService {
 	@Autowired
 	private CarroRepository repository;
 
-	public List<CarroDTO> getCarros() {
+	public List<CarroDTO> getCarros(Pageable pageable) {
 
-		return repository.findAll().stream().map(CarroDTO::create).collect(Collectors.toList());
+		return repository.findAll(pageable).stream().map(CarroDTO::create).collect(Collectors.toList());
 	
 	}
 
@@ -27,9 +28,14 @@ public class CarroService {
 		return repository.findById(id).map(CarroDTO::create).orElseThrow(() -> new ObjectNotFoundExecption("Carro não encotrado!!"));
 	}
 
-	public List<CarroDTO> getCarrosByTipo(String tipo) {
+	
+	public List<CarroDTO> search(String query) {
+	    return repository.findByNomeContaining(query).stream().map(CarroDTO::create).collect(Collectors.toList());
+	}
+	
+	public List<CarroDTO> getCarrosByTipo(String tipo, Pageable pageable) {
 
-		return repository.findByTipo(tipo).stream().map(CarroDTO::create).collect(Collectors.toList());
+		return repository.findByTipo(tipo, pageable).stream().map(CarroDTO::create).collect(Collectors.toList());
 	}
 
 	public CarroDTO insert(Carro carro) {
