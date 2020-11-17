@@ -29,6 +29,7 @@ public class User implements UserDetails{
 	private String login;
 	private String senha;
 	private String email;
+	private String token;
 	
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
@@ -38,13 +39,14 @@ public class User implements UserDetails{
 	public User() {
 		
 	}
-	public User(Long id, String nome, String login, String senha, String email) {
+	public User(Long id, String nome, String login, String senha, String email, String token) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.login = login;
 		this.senha = senha;
 		this.email = email;
+		this.token = token;
 	}
 	
 	
@@ -78,9 +80,16 @@ public class User implements UserDetails{
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	public String getToken() {
+		return token;
+	}
+	public void setToken(String token) {
+		this.token = token;
+	}
 	@Override
 	public String toString() {
-		return "User [id=" + id + ", nome=" + nome + ", login=" + login + ", senha=" + senha + ", email=" + email + "]";
+		return "User [id=" + id + ", nome=" + nome + ", login=" + login + ", senha=" + senha + ", email=" + email
+				+ ", token=" + token + ", roles=" + roles + "]";
 	}
 	
 	//Implements method userdetails
@@ -123,6 +132,7 @@ public class User implements UserDetails{
 		// TODO Auto-generated method stub
 		return roles;
 	}
+
 	
 	
 }
