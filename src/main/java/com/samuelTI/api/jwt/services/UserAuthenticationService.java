@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 import com.samuelTI.api.domain.DadosLogin;
 import com.samuelTI.api.domain.User;
 import com.samuelTI.api.domain.UserRepository;
-import com.samuelTI.api.execption.ExistngEmailException;
-import com.samuelTI.api.jwt.execption.ExistedTokenException;
-import com.samuelTI.api.jwt.execption.InvalidLoginException;
+import com.samuelTI.api.execption.ExistedTokenException;
+import com.samuelTI.api.execption.ExistingEmailException;
+import com.samuelTI.api.execption.InvalidLoginException;
 
 import io.jsonwebtoken.Claims;
 
@@ -27,7 +27,7 @@ public class UserAuthenticationService {
 	}
 	
 	public User authenticate(DadosLogin dados, String token) {
-		User user = repository.finByEmail(dados.getEmail()).orElseThrows(ExistngEmailException::new);
+		User user = repository.findByEmail(dados.getEmail()).orElseThrow(ExistingEmailException::new);
 		if (dados.getSenha().equals(user.getSenha()) && !token.isEmpty() && validate(token)) {
 			return user;
 		} else {

@@ -1,4 +1,4 @@
-package com.samuelTI.api.jwt.execption;
+package com.samuelTI.api.execption;
 
 public class ExistedTokenException extends RuntimeException {
 

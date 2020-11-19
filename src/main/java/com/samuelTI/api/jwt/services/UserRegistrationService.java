@@ -23,4 +23,5 @@ public class UserRegistrationService {
 		user.setToken(tokenService.generatetoken(user));
 		return userRepository.save(user);
 	}
+	
 }

@@ -49,6 +49,11 @@ public class User implements UserDetails{
 		this.token = token;
 	}
 	
+	public User(String nome, String email, String senha) {
+		this.nome = nome;
+		this.senha = senha;
+		this.email = email;
+	}
 	
 	public Long getId() {
 		return id;
